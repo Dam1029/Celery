@@ -1,9 +1,11 @@
-from  celery import Celery
+from __future__ import absolute_import
+from celery import Celery
 
-# CELERY_BROKER_URL = 'amqp://celery:celery@rabbitmq.service.sbay:5672/shanbay'
-BROKER_URL = 'redis://localhost:6379/0'
-app = Celery('tasks', broker=BROKER_URL)
+app = Celery('Celery',broker='redis://localhost',
+                backend='redis://localhost',
+                include=['Celery.tasks'])
 
-@app.task
-def add(x, y):
-    return x + y
+app.config_from_object('Celery.config')
+
+if __name__ == '__main__':
+   app.start()
